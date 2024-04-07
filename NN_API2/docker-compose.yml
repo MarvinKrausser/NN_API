@@ -1,0 +1,13 @@
+﻿version: '3.8'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5031:5031"  # Expose container port 5000 to host port 5000
+    volumes:
+      - .:/app      # Mount current directory as a volume to /app in the container
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development  # Set environment variable for ASP.NET Core
