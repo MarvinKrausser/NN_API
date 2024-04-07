@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using NN_API.Model;
+using NN_API2.Model;
 
 namespace NN_API.Controllers
 {
