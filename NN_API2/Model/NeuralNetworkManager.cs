@@ -14,9 +14,9 @@ public class NeuralNetworkManager
     private static INeuralNetwork network = CreateNn();
     private static SemaphoreSlim sem = new SemaphoreSlim(1);
     private static bool isTraining;
-    public static  void Train()
+    public static bool Train()
     {
-        if (isTraining) return;
+        if (isTraining) return false;
         sem.Wait();
         isTraining = true;
 
@@ -52,6 +52,8 @@ public class NeuralNetworkManager
             sem.Release(); 
             isTraining = false;
         }
+
+        return true;
     }
     
     private static void Shuffle<T>(List<T> list)

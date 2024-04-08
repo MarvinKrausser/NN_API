@@ -25,9 +25,9 @@ namespace NN_API.Controllers
 
         // POST: api/DigitNn
         [HttpPost]
-        public void Post()
+        public string Post()
         {
-            NeuralNetworkManager.Train();
+            return NeuralNetworkManager.Train() ? "Finished Training" : "Already Training";
         }
 
         // PUT: api/DigitNn/5
