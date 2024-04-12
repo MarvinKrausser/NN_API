@@ -106,12 +106,12 @@ public class NeuralNetworkDigits
     
     private static float[] OneHotEncode(int digit)
     {
-        if (digit < 0 || digit > 61)
+        if (digit < 0 || digit > charTable.Length - 1)
         {
             throw new ArgumentException("Digit must be between 0 and 61");
         }
 
-        float[] encodedArray = new float[62];
+        float[] encodedArray = new float[charTable.Length];
         encodedArray[digit] = 1;
         return encodedArray;
     }
@@ -122,6 +122,6 @@ public class NeuralNetworkDigits
             NetworkLayers.Convolutional((5, 5), 20, ActivationType.Identity),
             NetworkLayers.Pooling(ActivationType.LeakyReLU),
             NetworkLayers.FullyConnected(100, ActivationType.LeCunTanh),
-            NetworkLayers.Softmax(62));
+            NetworkLayers.Softmax(charTable.Length));
     }
 }
