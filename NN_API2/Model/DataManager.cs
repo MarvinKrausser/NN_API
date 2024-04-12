@@ -1,24 +1,31 @@
-﻿namespace NN_API.Model;
+﻿using Newtonsoft.Json;
+
+namespace NN_API.Model;
 
 public class DataManager
 {
     public static SemaphoreSlim semData = new SemaphoreSlim(1);
-    public static void AddData(string array)
+    public static void AddData((int, int[]) input)
     {
-        string result = string.Empty;
-        foreach (var c in array)
-        {
-            if (char.IsDigit(c))
-            {
-                result += c;
-            }
-        }
+        
 
         semData.Wait();
         try
         {
-            using StreamWriter writer = new StreamWriter(Directory.GetCurrentDirectory() + "\\data.txt", append: true);
-            writer.Write("$" + result);
+            string result;
+            using (StreamReader reader = new StreamReader(Directory.GetCurrentDirectory() + "/data.txt"))
+            {
+                result = reader.ReadToEnd();
+            }
+
+            var newArray = JsonConvert.DeserializeObject<List<(int, int[])>>(result);
+            newArray.Add(input);
+            var array = JsonConvert.SerializeObject(newArray);
+            
+            using (StreamWriter writer = new StreamWriter(Directory.GetCurrentDirectory() + "/data.txt", append: false))
+            {
+                writer.Write(array);
+            }
         }
         finally
         {
@@ -26,47 +33,19 @@ public class DataManager
         }
     }
     
-    public static (List<int>, List<List<int>>) GetData()
+    public static List<(int, int[])> GetData()
     {
-        List<List<int>> array = new List<List<int>>();
-        List<int> digits = new List<int>();
 
         semData.Wait();
 
         try
         {
-            using StreamReader reader = new StreamReader(Directory.GetCurrentDirectory() + "\\data.txt");
-            int charCode;
-            bool nextIsDigit = false;
-            int counter = -1;
-
-            // Read character by character until end of file
-            while ((charCode = reader.Read()) != -1)
-            {
-                char character = (char)charCode;
-
-                if (character == '$')
-                {
-                    array.Add(new List<int>());
-                    counter++;
-                    nextIsDigit = true;
-                }
-                else if (nextIsDigit)
-                {
-                    digits.Add(character - 48);
-                    nextIsDigit = false;
-                }
-                else
-                {
-                    array[counter].Add(character - 48);
-                }
-            }
+            using StreamReader reader = new StreamReader(Directory.GetCurrentDirectory() + "/data.txt");
+            return JsonConvert.DeserializeObject<List<(int, int[])>>(reader.ReadToEnd());
         }
         finally
         {
             semData.Release();
         }
-
-        return (digits, array);
     }
 }

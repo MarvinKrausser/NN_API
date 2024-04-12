@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "5064:5064"  # Expose container port 5000 to host port 5000
+      - "5064:80"  # Expose container port 5000 to host port 5000
     volumes:
       - .:/app      # Mount current directory as a volume to /app in the container
     environment:
