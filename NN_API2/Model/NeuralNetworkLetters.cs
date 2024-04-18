@@ -20,7 +20,6 @@ public class NeuralNetworkDigits
     private static string[] ReadTable()
     {
         using StreamReader sr = new StreamReader(Directory.GetCurrentDirectory() + "/characters.json");
-
         return JsonConvert.DeserializeObject<string[]>(sr.ReadToEnd());
     }
 
@@ -118,6 +117,7 @@ public class NeuralNetworkDigits
 
     private static INeuralNetwork CreateNn()
     {
+        charTable = ReadTable();
         return NetworkManager.NewSequential(TensorInfo.Image<Alpha8>(30, 30),
             NetworkLayers.Convolutional((5, 5), 20, ActivationType.Identity),
             NetworkLayers.Pooling(ActivationType.LeakyReLU),
