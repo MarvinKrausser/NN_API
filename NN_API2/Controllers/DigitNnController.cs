@@ -10,45 +10,59 @@ namespace NN_API.Controllers
     [ApiController]
     public class DigitNnController : ControllerBase
     {
-        // GET: api/DigitNn
         [HttpGet]
         public string Get(string data)
         {
-            return NeuralNetworkDigits.Predicate(JsonConvert.DeserializeObject<int[]>(data));
+            return NeuralNetworkDigits.Predict(JsonConvert.DeserializeObject<int[]>(data));
         }
-
-        // GET: api/DigitNn/5
-        [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
+        
+        [HttpGet("getData")]
+        public string GetData()
         {
-            return "value";
+            return JsonConvert.SerializeObject(DataManager.GetData());
+        }
+        
+        [HttpGet("getStop")]
+        public string GetStop()
+        {
+            return !DataManager.stop ? "true" : "false";
+        }
+        
+        [HttpGet("getKey")]
+        public string GetKey(string key)
+        {
+            return JsonConvert.SerializeObject(DataManager.CheckKey(key));
         }
 
-        // POST: api/DigitNn
         [HttpPost]
         public string Post()
         {
             return NeuralNetworkDigits.Train() ? "Finished Training" : "Already Training";
         }
+        
+        [HttpPost("stop")]
+        public string PostStop(string stop, string key)
+        {
+            return DataManager.ChangeStop(JsonConvert.DeserializeObject<bool>(stop), key);
+        }
 
-        // PUT: api/DigitNn/5
         [HttpPut]
-        public void Put(string data)
+        public string Put(string data)
         {
             Data dataProcessed = JsonConvert.DeserializeObject<Data>(data);
-            DataManager.AddData((dataProcessed.target, dataProcessed.input));
+            return DataManager.AddData((dataProcessed.target, dataProcessed.input));
+        }
+        
+        [HttpDelete]
+        public string Delete(int index, string key)
+        {
+            return DataManager.Delete(index, key);
         }
 
         class Data
         {
             public int target;
             public int[] input;
-        }
-
-        // DELETE: api/DigitNn/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
         }
     }
 }

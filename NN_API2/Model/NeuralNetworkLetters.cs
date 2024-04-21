@@ -33,6 +33,8 @@ public class NeuralNetworkDigits
         {
             var dataRaw = DataManager.GetData();
 
+            if (dataRaw.Count == 0) return true;
+
             List<(float[], float[])> data = new List<(float[], float[])>();
 
             for (int i = 0; i < dataRaw.Count; i++)
@@ -81,7 +83,7 @@ public class NeuralNetworkDigits
         }
     }
     
-    public static string Predicate(int[] input)
+    public static string Predict(int[] input)
     {
         sem.Wait();
         try
